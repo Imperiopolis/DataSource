@@ -20,16 +20,51 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- */
+*/
 
-#import <UIKit/UIKit.h>
+import UIKit
 
-//! Project version number for DataSource.
-FOUNDATION_EXPORT double DataSourceVersionNumber;
+public struct Section<Element: Item>: ArrayLiteralConvertible, CollectionType, Indexable, SequenceType, MutableCollectionType  {
+    public var headerTitle: String?
+    public var footerTitle: String?
+    private var items = [Element]()
 
-//! Project version string for DataSource.
-FOUNDATION_EXPORT const unsigned char DataSourceVersionString[];
+    public var count: Int {
+        return items.count
+    }
 
-// In this header, you should import all the public headers of your framework using statements like #import <DataSource/PublicHeader.h>
+    public init(arrayLiteral elements: Element...) {
+        items = elements
+    }
 
+    public init(items elements: [Element]) {
+        items = elements
+    }
 
+    // MARK: - SequenceType
+
+    public func generate() -> IndexingGenerator<[Element]> {
+        return items.generate()
+    }
+
+    // MARK: - Indexable
+
+    public typealias Index = Int
+
+    public var startIndex: Index {
+        return items.startIndex
+    }
+
+    public var endIndex: Index {
+        return items.endIndex
+    }
+
+    public subscript(position: Index) -> Element {
+        get {
+            return items[position]
+        }
+        set {
+            items[position] = newValue
+        }
+    }
+}
