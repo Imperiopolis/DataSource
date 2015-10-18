@@ -73,6 +73,10 @@ class ViewController: UITableViewController, TableViewDataSourceDelegate {
         cell.textLabel?.text = item.title
     }
 
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+
 }
 
 class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
@@ -91,6 +95,7 @@ class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
         textLabel?.text = item.title?.uppercaseString
         detailTextLabel?.text = item.subtitle
         detailTextLabel?.textColor = .lightGrayColor()
+        accessoryType = .DisclosureIndicator
     }
 
 }

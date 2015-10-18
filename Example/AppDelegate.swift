@@ -32,7 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let w = UIWindow(frame: UIScreen.mainScreen().bounds)
-        w.rootViewController = UINavigationController(rootViewController: ViewController(style: .Grouped))
+        let controller = ViewController(style: .Grouped)
+        controller.title = "Data Source Example"
+        w.rootViewController = UINavigationController(rootViewController: controller)
         w.rootViewController?.title = "Example"
         w.makeKeyAndVisible()
         window = w
