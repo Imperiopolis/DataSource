@@ -25,13 +25,13 @@
 import UIKit
 import DataSource
 
-class ViewController: UITableViewController, TableViewDataSourceCellConfigurationDelegate {
+class ViewController: UITableViewController, TableViewDataSourceDelegate {
 
     let dataSource = DataSource<DataItem>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataSource.configure(tableView: tableView, configurationDelegate: self)
+        dataSource.configure(tableView: tableView, delegate: self)
 
         // Verbosely create a section
         var item1 = DataItem()
@@ -47,10 +47,7 @@ class ViewController: UITableViewController, TableViewDataSourceCellConfiguratio
         dataSource.appendSection(["Item 1", "Item 2", "Item 3"])
 
         // Now let's use a custom cell class
-
-        // First, register the class with the appropriate cell type
-        dataSource.registerTableCell(cellType: 1, cellClass: CustomCellClass.self)
-
+        // Register the cell class in the `registerCells` protocol method. (implemented below)
         let fancyItems: [DataItem] = (1...3).map {
             var item = DataItem()
             item.title = "Item \($0)"
@@ -62,6 +59,10 @@ class ViewController: UITableViewController, TableViewDataSourceCellConfiguratio
         var section2 = Section(items: fancyItems)
         section2.headerTitle = "custom cells!" // set a header if you'd like
         dataSource.appendSection(section2)
+    }
+
+    func registerCells() {
+        dataSource.registerTableCell(cellType: 1, cellClass: CustomCellClass.self)
     }
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {

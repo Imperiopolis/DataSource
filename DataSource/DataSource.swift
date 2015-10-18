@@ -24,100 +24,235 @@
 
 import UIKit
 
-public protocol TableViewDataSourceCellConfigurationDelegate: class {
+public protocol TableViewDataSourceDelegate: class {
+
+    /**
+    Register cells the necessary cells.
+    */
+    func registerCells()
+
+    /**
+    Configure a cell for display. This method is called immediately after the cell is dequeued.
+
+    - parameter cell:      The cell to configure.
+    - parameter indexPath: The index path the cell will be displayed at.
+    */
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
 }
 
-public protocol CollectionViewDataSourceCellConfigurationDelegate: class {
+public protocol CollectionViewDataSourceDelegate: class {
+
+    /**
+    Register cells the necessary cells.
+    */
+    func registerCells()
+
+    /**
+    Configure a cell for display. This method is called immediately after the cell is dequeued.
+
+    - parameter cell:      The cell to configure.
+    - parameter indexPath: The index path the cell will be displayed at.
+    */
     func configureCell(cell: UICollectionViewCell, atIndexPath indexPath: NSIndexPath)
 }
 
 public protocol CellConfigurationDelegate {
+
+    /**
+    Configure a cell for display. When implemented, this method is called immediately after the collection/table data source's configureCell method and allows for further customization.
+
+    - parameter item:      The model item.
+    - parameter indexPath: The index path the receiver will be displayed at.
+    */
     func configureWithItem(item: Item, indexPath: NSIndexPath)
 }
 
 public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, CollectionType, SequenceType, Indexable, MutableCollectionType {
 
     private var sections = [Section<Element>]()
-    private weak var tableView: UITableView?
-    private weak var tableConfigurationDelegate: TableViewDataSourceCellConfigurationDelegate?
-    private weak var collectionView: UICollectionView?
-    private weak var collectionConfigurationDelegate: CollectionViewDataSourceCellConfigurationDelegate?
+    private var tableView: UITableView?
+    private weak var tableDelegate: TableViewDataSourceDelegate?
+    private var collectionView: UICollectionView?
+    private weak var collectionDelegate: CollectionViewDataSourceDelegate?
+    private var configuring = false
 
     override public init() {
 
     }
 
-    public func configure(tableView aTableView: UITableView, configurationDelegate: TableViewDataSourceCellConfigurationDelegate? = nil) {
+    // MARK - Configure the data source
+
+    /**
+    Configure the data source with the given table view and delegate. This method may only be called once.
+
+    - parameter aTableView: The table view.
+    - parameter delegate:   The delegate.
+    */
+    public func configure(tableView aTableView: UITableView, delegate: TableViewDataSourceDelegate? = nil) {
         guard collectionView == nil else {
             fatalError("This data source is already configured with a collection view")
         }
 
+        guard tableView == nil else {
+            fatalError("This data source is already configured")
+        }
+
+        configuring = true
         tableView = aTableView
-        tableConfigurationDelegate = configurationDelegate
+        tableDelegate = delegate
+        registerTableCell(cellType: 0, cellClass: UITableViewCell.self)
+        delegate?.registerCells()
         tableView?.dataSource = self
-        registerCells()
+        configuring = false
     }
 
-    public func configure(collectionView aCollectionView: UICollectionView, configurationDelegate: CollectionViewDataSourceCellConfigurationDelegate? = nil) {
+    /**
+    Configure the data source with the given collection view and delegate. This method may only be called once.
+
+    - parameter aCollectionView: The collection view.
+    - parameter delegate:        The delegate.
+    */
+    public func configure(collectionView aCollectionView: UICollectionView, delegate: CollectionViewDataSourceDelegate? = nil) {
         guard tableView == nil else {
             fatalError("This data source is already configured with a table view")
         }
 
+        guard collectionView == nil else {
+            fatalError("This data source is already configured")
+        }
+
+        configuring = true
         collectionView = aCollectionView
-        collectionConfigurationDelegate = configurationDelegate
+        collectionDelegate = delegate
+        registerCollectionCell(cellType: 0, cellClass: UICollectionViewCell.self)
+        delegate?.registerCells()
         collectionView?.dataSource = self
-        registerCells()
+        configuring = false
     }
 
+    // MARK - Interact with the data source
+
+    /**
+    Add a new section at the end of the data source.
+
+    - parameter section: The section to add.
+    */
     public func appendSection(section: Section<Element>) {
         sections.append(section)
     }
 
+    /**
+    Insert a new section at the given index.
+
+    - parameter section: The section to be inserted.
+    - parameter index:   The index at which the section should be inserted.
+    */
     public func insertSection(section: Section<Element>, atIndex index: Int) {
         sections.insert(section, atIndex: index)
     }
 
-    public func removeSectionAtIndex(index: Int) {
+    /**
+    Remove a section at the given index.
+
+    - parameter index: The index from which to remove a section.
+
+    - returns: The section that was removed.
+    */
+    public func removeSectionAtIndex(index: Int) -> Section<Element> {
         if index < sections.count {
-            sections.removeAtIndex(index)
+            return sections.removeAtIndex(index)
+        } else {
+            fatalError("The index \(index) is out of bounds.")
         }
     }
 
+    /**
+    Return the item at the given index path, or nil.
+
+    - parameter indexPath: The index path.
+
+    - returns: The item at the given index path, or nil.
+    */
     public func itemForIndexPath(indexPath: NSIndexPath) -> Item? {
-        if let section = sectionForSection(indexPath.section) where indexPath.row < section.count {
+        if let section = sectionAtIndex(indexPath.section) where indexPath.row < section.count {
             return section[indexPath.row]
         }
 
         return nil
     }
 
+    /// Returns the total number of items, across all sections, in the data source.
     public var totalNumberOfItems: Int {
         return sections.reduce(0) { total, section in
             return total + section.count
         }
     }
 
+    /**
+    Returns the section at the given index, or nil.
+
+    - parameter index: The index.
+
+    - returns: The section at the given index, or nil.
+    */
+    public func sectionAtIndex(index: Int) -> Section<Element>? {
+        return index < sections.count ? sections[index] : nil
+    }
+
     // MARK - Cell registration
 
-    public func registerCells() {
-        if tableView != nil {
-            registerTableCell(cellType: 0, cellClass: UITableViewCell.self)
-        } else if collectionView != nil {
-            registerCollectionCell(cellType: 0, cellClass: UICollectionViewCell.self)
-        }
-    }
+    /**
+    Register a table cell class for the given cell type. This method must only be called from with in registerCells.
 
+    - parameter cellType:  The cell type (reuse identifier).
+    - parameter cellClass: The cell class.
+    */
     public func registerTableCell(cellType cellType: Int, cellClass: AnyClass) {
-        tableView?.registerClass(cellClass, forCellReuseIdentifier: String(cellType))
+        guard configuring else {
+            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+        }
+
+        guard let tableView = tableView else {
+            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a table view.")
+        }
+
+        tableView.registerClass(cellClass, forCellReuseIdentifier: String(cellType))
     }
 
+    /**
+    Register a view class for the given view type. This method must only be called from with in registerCells.
+
+    - parameter viewType:  The view type (reuse identifier).
+    - parameter viewClass: The view class.
+    */
     public func registerTableHeaderFooterView(viewType viewType: Int, viewClass: AnyClass) {
-        tableView?.registerClass(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
+        guard configuring else {
+            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+        }
+
+        guard let tableView = tableView else {
+            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a table view.")
+        }
+
+        tableView.registerClass(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
     }
 
+    /**
+    Register a collection cell class for the given cell type. This method must only be called from with in registerCells.
+
+    - parameter cellType:  The cell type (reuse identifier).
+    - parameter cellClass: The cell class.
+    */
     public func registerCollectionCell(cellType cellType: Int, cellClass: AnyClass) {
-        collectionView?.registerClass(cellClass, forCellWithReuseIdentifier: String(cellType))
+        guard configuring else {
+            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+        }
+
+        guard let collectionView = collectionView else {
+            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a collection view.")
+        }
+
+        collectionView.registerClass(cellClass, forCellWithReuseIdentifier: String(cellType))
     }
 
     // MARK: - UITableViewDataSource methods
@@ -127,7 +262,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionForSection(section)?.count ?? 0
+        return sectionAtIndex(section)?.count ?? 0
     }
 
     public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -137,7 +272,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
         let cell = tableView.dequeueReusableCellWithIdentifier(String(item.cellType), forIndexPath: indexPath)
 
-        tableConfigurationDelegate?.configureCell(cell, atIndexPath: indexPath)
+        tableDelegate?.configureCell(cell, atIndexPath: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
             cell.configureWithItem(item, indexPath: indexPath)
@@ -147,11 +282,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     public func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionForSection(section)?.headerTitle
+        return sectionAtIndex(section)?.headerTitle
     }
 
     public func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return sectionForSection(section)?.footerTitle
+        return sectionAtIndex(section)?.footerTitle
     }
 
     // MARK: - UICollectionViewDataSource methods
@@ -161,7 +296,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sectionForSection(section)?.count ?? 0
+        return sectionAtIndex(section)?.count ?? 0
     }
 
     public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -171,19 +306,13 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(item.cellType), forIndexPath: indexPath)
 
-        collectionConfigurationDelegate?.configureCell(cell, atIndexPath: indexPath)
+        collectionDelegate?.configureCell(cell, atIndexPath: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
             cell.configureWithItem(item, indexPath: indexPath)
         }
 
         return cell
-    }
-
-    // MARK: - Private
-
-    private func sectionForSection(section: Int) -> Section<Element>? {
-        return section < sections.count ? sections[section] : nil
     }
 
     // MARK: - SequenceType
