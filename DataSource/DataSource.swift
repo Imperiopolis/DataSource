@@ -165,6 +165,13 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             fatalError("The index \(index) is out of bounds.")
         }
     }
+    
+    /**
+     Remove all existing sections.
+     */
+    public func removeAllSections() {
+        sections.removeAll()
+    }
 
     /**
     Return the item at the given index path, or nil.
@@ -314,7 +321,119 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
         return cell
     }
-
+    
+    // MARK: - Reloader
+    
+    /**
+    Trigger a data reload.
+    */
+    public func reloadData() {
+        if let tableView = tableView {
+            tableView.reloadData()
+        } else if let collectionView = collectionView {
+            collectionView.reloadData()
+        }
+    }
+    
+    /**
+     Perform multiple insert/add/remove operations as a group.
+     
+     - parameter updates: actions to group
+     */
+    public func performUpdates(updates: () -> ()) {
+        if let tableView = tableView {
+            tableView.beginUpdates()
+            updates()
+            tableView.endUpdates()
+        } else if let collectionView = collectionView {
+            collectionView.performBatchUpdates(updates, completion: nil)
+        }
+    }
+    
+    /**
+     Reload the sepcified rows. For table views, the provided animation effect will be applied.
+     
+     - parameter indexPaths: index paths to reload
+     - parameter animation:  animation effect
+     */
+    public func reloadIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.reloadItemsAtIndexPaths(indexPaths)
+        }
+    }
+    
+    /**
+     Reload the sepcified sections. For table views, the provided animation effect will be applied.
+     
+     - parameter sections: sections to reload
+     - parameter animation:  animation effect
+     */
+    public func reloadSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.reloadSections(sections, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.reloadSections(sections)
+        }
+    }
+    
+    /**
+     Insert rows at the specified index paths. For table views, the provided animation effect will be applied.
+     
+     - parameter indexPaths: rows to insert
+     - parameter animation:  animation effect
+     */
+    public func insertRowsAtIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.insertItemsAtIndexPaths(indexPaths)
+        }
+    }
+    
+    /**
+     Delete rows at the specified index paths. For table views, the provided animation effect will be applied.
+     
+     - parameter indexPaths: rows to delete
+     - parameter animation:  animation effect
+     */
+    public func deleteRowsAtIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.deleteItemsAtIndexPaths(indexPaths)
+        }
+    }
+    
+    /**
+     Insert sections at the specified indexes. For table views, the provided animation effect will be applied.
+     
+     - parameter sections: sections to insert
+     - parameter animation:  animation effect
+     */
+    public func insertSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.insertSections(sections, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.insertSections(sections)
+        }
+    }
+    
+    /**
+     Insert sections at the specified indexes. For table views, the provided animation effect will be applied.
+     
+     - parameter sections: sections to insert
+     - parameter animation:  animation effect
+     */
+    public func deleteSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+        if let tableView = tableView {
+            tableView.deleteSections(sections, withRowAnimation: animation)
+        } else if let collectionView = collectionView {
+            collectionView.deleteSections(sections)
+        }
+    }
+    
     // MARK: - SequenceType
 
     public func generate() -> IndexingGenerator<[Section<Element>]> {
