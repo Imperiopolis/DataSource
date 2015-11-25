@@ -38,6 +38,8 @@ public class ExtendableItem: Item {
     public var subtitle: String?
     public var image: UIImage?
     public var cellType: Int = 0
+
+    public required init() {}
 }
 
 public struct DataItem: Item, StringLiteralConvertible {
