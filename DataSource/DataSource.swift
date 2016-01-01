@@ -27,7 +27,7 @@ import UIKit
 public protocol CellRegistrationDataSourceDelegate: class {
 
     /**
-     Register cells the necessary cells.
+     Register the necessary cells.
      */
     func registerCells()
 }
