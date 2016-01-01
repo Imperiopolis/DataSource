@@ -1,25 +1,25 @@
 /*
- The MIT License (MIT)
+The MIT License (MIT)
 
- Copyright (c) 2015 Cameron Pulsford
+Copyright (c) 2015 Cameron Pulsford
 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 */
 
 import UIKit
@@ -27,43 +27,43 @@ import UIKit
 public protocol TableViewDataSourceDelegate: class {
 
     /**
-    Register cells the necessary cells.
-    */
+     Register cells the necessary cells.
+     */
     func registerCells()
 
     /**
-    Configure a cell for display. This method is called immediately after the cell is dequeued.
+     Configure a cell for display. This method is called immediately after the cell is dequeued.
 
-    - parameter cell:      The cell to configure.
-    - parameter indexPath: The index path the cell will be displayed at.
-    */
+     - parameter cell:      The cell to configure.
+     - parameter indexPath: The index path the cell will be displayed at.
+     */
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
 }
 
 public protocol CollectionViewDataSourceDelegate: class {
 
     /**
-    Register cells the necessary cells.
-    */
+     Register cells the necessary cells.
+     */
     func registerCells()
 
     /**
-    Configure a cell for display. This method is called immediately after the cell is dequeued.
+     Configure a cell for display. This method is called immediately after the cell is dequeued.
 
-    - parameter cell:      The cell to configure.
-    - parameter indexPath: The index path the cell will be displayed at.
-    */
+     - parameter cell:      The cell to configure.
+     - parameter indexPath: The index path the cell will be displayed at.
+     */
     func configureCell(cell: UICollectionViewCell, atIndexPath indexPath: NSIndexPath)
 }
 
 public protocol CellConfigurationDelegate {
 
     /**
-    Configure a cell for display. When implemented, this method is called immediately after the collection/table data source's configureCell method and allows for further customization.
+     Configure a cell for display. When implemented, this method is called immediately after the collection/table data source's configureCell method and allows for further customization.
 
-    - parameter item:      The model item.
-    - parameter indexPath: The index path the receiver will be displayed at.
-    */
+     - parameter item:      The model item.
+     - parameter indexPath: The index path the receiver will be displayed at.
+     */
     func configureWithItem(item: Item, indexPath: NSIndexPath)
 }
 
@@ -107,11 +107,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Configure the data source with the given collection view and delegate. This method may only be called once.
+     Configure the data source with the given collection view and delegate. This method may only be called once.
 
-    - parameter aCollectionView: The collection view.
-    - parameter delegate:        The delegate.
-    */
+     - parameter aCollectionView: The collection view.
+     - parameter delegate:        The delegate.
+     */
     public func configure(collectionView aCollectionView: UICollectionView, delegate: CollectionViewDataSourceDelegate? = nil) {
         guard tableView == nil else {
             fatalError("This data source is already configured with a table view")
@@ -142,22 +142,22 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Insert a new section at the given index.
+     Insert a new section at the given index.
 
-    - parameter section: The section to be inserted.
-    - parameter index:   The index at which the section should be inserted.
-    */
+     - parameter section: The section to be inserted.
+     - parameter index:   The index at which the section should be inserted.
+     */
     public func insertSection(section: Section<Element>, atIndex index: Int) {
         sections.insert(section, atIndex: index)
     }
 
     /**
-    Remove a section at the given index.
+     Remove a section at the given index.
 
-    - parameter index: The index from which to remove a section.
+     - parameter index: The index from which to remove a section.
 
-    - returns: The section that was removed.
-    */
+     - returns: The section that was removed.
+     */
     public func removeSectionAtIndex(index: Int) -> Section<Element> {
         if index < sections.count {
             return sections.removeAtIndex(index)
@@ -165,7 +165,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             fatalError("The index \(index) is out of bounds.")
         }
     }
-    
+
     /**
      Remove all existing sections.
      */
@@ -174,12 +174,12 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Return the item at the given index path, or nil.
+     Return the item at the given index path, or nil.
 
-    - parameter indexPath: The index path.
+     - parameter indexPath: The index path.
 
-    - returns: The item at the given index path, or nil.
-    */
+     - returns: The item at the given index path, or nil.
+     */
     public func itemForIndexPath(indexPath: NSIndexPath) -> Item? {
         if let section = sectionAtIndex(indexPath.section) where indexPath.row < section.count {
             return section[indexPath.row]
@@ -196,12 +196,12 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Returns the section at the given index, or nil.
+     Returns the section at the given index, or nil.
 
-    - parameter index: The index.
+     - parameter index: The index.
 
-    - returns: The section at the given index, or nil.
-    */
+     - returns: The section at the given index, or nil.
+     */
     public func sectionAtIndex(index: Int) -> Section<Element>? {
         return index < sections.count ? sections[index] : nil
     }
@@ -227,11 +227,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Register a view class for the given view type. This method must only be called from with in registerCells.
+     Register a view class for the given view type. This method must only be called from with in registerCells.
 
-    - parameter viewType:  The view type (reuse identifier).
-    - parameter viewClass: The view class.
-    */
+     - parameter viewType:  The view type (reuse identifier).
+     - parameter viewClass: The view class.
+     */
     public func registerTableHeaderFooterView(viewType viewType: Int, viewClass: AnyClass) {
         guard configuring else {
             fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
@@ -245,11 +245,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-    Register a collection cell class for the given cell type. This method must only be called from with in registerCells.
+     Register a collection cell class for the given cell type. This method must only be called from with in registerCells.
 
-    - parameter cellType:  The cell type (reuse identifier).
-    - parameter cellClass: The cell class.
-    */
+     - parameter cellType:  The cell type (reuse identifier).
+     - parameter cellClass: The cell class.
+     */
     public func registerCollectionCell(cellType cellType: Int, cellClass: AnyClass) {
         guard configuring else {
             fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
@@ -321,9 +321,9 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
         return cell
     }
-    
+
     // MARK: - Reloader
-    
+
     /**
     Trigger a data reload.
     */
@@ -334,10 +334,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.reloadData()
         }
     }
-    
+
     /**
      Perform multiple insert/add/remove operations as a group.
-     
+
      - parameter updates: actions to group
      */
     public func performUpdates(updates: () -> ()) {
@@ -349,10 +349,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.performBatchUpdates(updates, completion: nil)
         }
     }
-    
+
     /**
      Reload the sepcified rows. For table views, the provided animation effect will be applied.
-     
+
      - parameter indexPaths: index paths to reload
      - parameter animation:  animation effect
      */
@@ -363,10 +363,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.reloadItemsAtIndexPaths(indexPaths)
         }
     }
-    
+
     /**
      Reload the sepcified sections. For table views, the provided animation effect will be applied.
-     
+
      - parameter sections: sections to reload
      - parameter animation:  animation effect
      */
@@ -377,10 +377,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.reloadSections(sections)
         }
     }
-    
+
     /**
      Insert rows at the specified index paths. For table views, the provided animation effect will be applied.
-     
+
      - parameter indexPaths: rows to insert
      - parameter animation:  animation effect
      */
@@ -391,10 +391,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.insertItemsAtIndexPaths(indexPaths)
         }
     }
-    
+
     /**
      Delete rows at the specified index paths. For table views, the provided animation effect will be applied.
-     
+
      - parameter indexPaths: rows to delete
      - parameter animation:  animation effect
      */
@@ -405,10 +405,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.deleteItemsAtIndexPaths(indexPaths)
         }
     }
-    
+
     /**
      Insert sections at the specified indexes. For table views, the provided animation effect will be applied.
-     
+
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
@@ -419,10 +419,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.insertSections(sections)
         }
     }
-    
+
     /**
      Insert sections at the specified indexes. For table views, the provided animation effect will be applied.
-     
+
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
@@ -433,7 +433,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             collectionView.deleteSections(sections)
         }
     }
-    
+
     // MARK: - SequenceType
 
     public func generate() -> IndexingGenerator<[Section<Element>]> {
@@ -451,7 +451,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     public var endIndex: Index {
         return sections.endIndex
     }
-    
+
     public subscript(position: Index) -> Section<Element> {
         get {
             return sections[position]
@@ -460,5 +460,5 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
             sections[position] = newValue
         }
     }
-    
+
 }
