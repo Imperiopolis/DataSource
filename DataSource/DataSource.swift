@@ -24,12 +24,15 @@ THE SOFTWARE.
 
 import UIKit
 
-public protocol TableViewDataSourceDelegate: class {
+public protocol CellRegistrationDataSourceDelegate: class {
 
     /**
      Register cells the necessary cells.
      */
     func registerCells()
+}
+
+public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
 
     /**
      Configure a cell for display. This method is called immediately after the cell is dequeued.
@@ -40,12 +43,7 @@ public protocol TableViewDataSourceDelegate: class {
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
 }
 
-public protocol CollectionViewDataSourceDelegate: class {
-
-    /**
-     Register cells the necessary cells.
-     */
-    func registerCells()
+public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
 
     /**
      Configure a cell for display. This method is called immediately after the cell is dequeued.
