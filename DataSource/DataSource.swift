@@ -67,12 +67,12 @@ public protocol CellConfigurationDelegate {
 
 public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, CollectionType, SequenceType, Indexable, MutableCollectionType {
 
-    private var sections = [Section<Element>]()
+    private var sections: [Section<Element>] = []
     private var tableView: UITableView?
     private weak var tableDelegate: TableViewDataSourceDelegate?
     private var collectionView: UICollectionView?
     private weak var collectionDelegate: CollectionViewDataSourceDelegate?
-    private var configuring = false
+    private var configuring: Bool = false
 
     override public init() {
 
