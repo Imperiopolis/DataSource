@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 import UIKit
 
-public struct Section<Element: Item>: ArrayLiteralConvertible, CollectionType, Indexable, SequenceType, MutableCollectionType  {
+public struct Section<Element: Item>: ArrayLiteralConvertible, MutableCollectionType  {
     public var headerTitle: String?
     public var footerTitle: String?
     private var items = [Element]()

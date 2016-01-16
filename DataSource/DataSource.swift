@@ -65,7 +65,7 @@ public protocol CellConfigurationDelegate {
     func configureWithItem(item: Item, indexPath: NSIndexPath)
 }
 
-public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, CollectionType, SequenceType, Indexable, MutableCollectionType {
+public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, MutableCollectionType {
 
     private var sections: [Section<Element>] = []
     private var tableView: UITableView?
