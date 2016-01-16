@@ -32,6 +32,14 @@ public protocol CellRegistrationDataSourceDelegate: class {
     func registerCells()
 }
 
+public extension CellRegistrationDataSourceDelegate {
+    
+    func registerCells() {
+        
+    }
+    
+}
+
 public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
 
     /**
