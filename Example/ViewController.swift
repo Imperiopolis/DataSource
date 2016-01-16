@@ -25,7 +25,7 @@ THE SOFTWARE.
 import UIKit
 import DataSource
 
-class ViewController: UITableViewController, TableViewDataSourceDelegate {
+class TableViewController: UITableViewController, TableViewDataSourceDelegate {
 
     let dataSource = DataSource<DataItem>()
 

@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let w = UIWindow(frame: UIScreen.mainScreen().bounds)
-        let controller = ViewController(style: .Grouped)
+        let controller = TableViewController(style: .Grouped)
         controller.title = "Data Source Example"
         w.rootViewController = UINavigationController(rootViewController: controller)
         w.rootViewController?.title = "Example"
