@@ -43,7 +43,7 @@ class ViewController: UITableViewController, TableViewDataSourceDelegate {
         let section1 = Section(items: [item1, item2, item3])
         dataSource.appendSection(section1)
 
-        // Through the magic (evil?) of swift, the above code can be identically acheived like this:
+        // With array and string literal convertibles, the above code can be identically acheived like this:
         dataSource.appendSection(["Item 1", "Item 2", "Item 3"])
 
         // Now let's use a custom cell class

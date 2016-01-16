@@ -27,6 +27,8 @@ import UIKit
 public struct Section<Element: Item>: ArrayLiteralConvertible, MutableCollectionType  {
     public var headerTitle: String?
     public var footerTitle: String?
+    public var headerType: Int?
+    public var footerType: Int?
     private var items = [Element]()
 
     public var count: Int {

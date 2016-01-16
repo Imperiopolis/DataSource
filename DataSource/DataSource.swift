@@ -204,10 +204,10 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
         return index < sections.count ? sections[index] : nil
     }
 
-    // MARK - Cell registration
+    // MARK: - Table registrations
 
     /**
-    Register a table cell class for the given cell type. This method must only be called from with in registerCells.
+    Register a table cell class for the given cell type. This method may only be called from with in the registerCells.
 
     - parameter cellType:  The cell type (reuse identifier).
     - parameter cellClass: The cell class.
@@ -225,7 +225,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     }
 
     /**
-     Register a view class for the given view type. This method must only be called from with in registerCells.
+     Register a view class for the given view type. This method may only be called from with in the registerCells.
 
      - parameter viewType:  The view type (reuse identifier).
      - parameter viewClass: The view class.
@@ -241,9 +241,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
         tableView.registerClass(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
     }
+    
+    // MARK: - Collection registrations
 
     /**
-     Register a collection cell class for the given cell type. This method must only be called from with in registerCells.
+     Register a collection cell class for the given cell type. This method may only be called from with in the registerCells.
 
      - parameter cellType:  The cell type (reuse identifier).
      - parameter cellClass: The cell class.
