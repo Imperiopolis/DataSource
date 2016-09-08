@@ -24,12 +24,12 @@ THE SOFTWARE.
 
 import UIKit
 
-public struct Section<Element: Item>: ArrayLiteralConvertible, MutableCollectionType  {
+public struct Section<Element: Item>: ExpressibleByArrayLiteral, MutableCollection {
     public var headerTitle: String?
     public var footerTitle: String?
     public var headerType: Int?
     public var footerType: Int?
-    private var items = [Element]()
+    fileprivate var items = [Element]()
 
     public var count: Int {
         return items.count
@@ -45,8 +45,8 @@ public struct Section<Element: Item>: ArrayLiteralConvertible, MutableCollection
 
     // MARK: - SequenceType
 
-    public func generate() -> IndexingGenerator<[Element]> {
-        return items.generate()
+    public func makeIterator() -> IndexingIterator<[Element]> {
+        return items.makeIterator()
     }
 
     // MARK: - Indexable
@@ -68,5 +68,11 @@ public struct Section<Element: Item>: ArrayLiteralConvertible, MutableCollection
         set {
             items[position] = newValue
         }
+    }
+
+    // MARK: - MutableIndexable
+
+    public func index(after i: Int) -> Int {
+        return items.index(after: i)
     }
 }

@@ -65,7 +65,7 @@ class TableViewController: UITableViewController, TableViewDataSourceDelegate {
         dataSource.registerTableCell(cellType: 1, cellClass: CustomCellClass.self)
     }
 
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    func configure(cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
         guard let item = dataSource.itemForIndexPath(indexPath) else {
             return
         }
@@ -73,8 +73,8 @@ class TableViewController: UITableViewController, TableViewDataSourceDelegate {
         cell.textLabel?.text = item.title
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
 }
@@ -82,20 +82,21 @@ class TableViewController: UITableViewController, TableViewDataSourceDelegate {
 class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configureWithItem(item: Item, indexPath: NSIndexPath) {
+    func configureWithItem(_ item: Item, indexPath: IndexPath) {
         // This method is performed AFTER the viewController's
         // equivalent `configureCell` method and can allow for further customization.
-        textLabel?.text = item.title?.uppercaseString
+        textLabel?.text = item.title?.uppercased()
+        textLabel?.text = item.title?.uppercased()
         detailTextLabel?.text = item.subtitle
-        detailTextLabel?.textColor = .lightGrayColor()
-        accessoryType = .DisclosureIndicator
+        detailTextLabel?.textColor = .lightGray
+        accessoryType = .disclosureIndicator
     }
 
 }

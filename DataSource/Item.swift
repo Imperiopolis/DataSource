@@ -33,18 +33,18 @@ public protocol Item {
     var cellType: Int { get set }
 }
 
-public class ExtendableItem: Item {
-    public var title: String?
-    public var subtitle: String?
-    public var image: UIImage?
-    public var cellType: Int = 0
+open class ExtendableItem: Item {
+    open var title: String?
+    open var subtitle: String?
+    open var image: UIImage?
+    open var cellType: Int = 0
 
     public init() {
 
     }
 }
 
-public struct DataItem: Item, StringLiteralConvertible {
+public struct DataItem: Item, ExpressibleByStringLiteral {
     public var title: String?
     public var subtitle: String?
     public var image: UIImage?
@@ -57,7 +57,7 @@ public struct DataItem: Item, StringLiteralConvertible {
         cellType = ct
     }
 
-    public static func Item(title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> DataItem {
+    public static func Item(_ title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> DataItem {
         return self.init(title: title, subtitle: subtitle, image: image, cellType: cellType)
     }
 
@@ -76,7 +76,7 @@ public struct DataItem: Item, StringLiteralConvertible {
     }
 }
 
-public struct GenericDataItem<T>: Item, StringLiteralConvertible {
+public struct GenericDataItem<T>: Item, ExpressibleByStringLiteral {
     public var data: T?
     public var title: String?
     public var subtitle: String?
@@ -91,7 +91,7 @@ public struct GenericDataItem<T>: Item, StringLiteralConvertible {
         cellType = ct
     }
 
-    public static func Item(data: T? = nil, title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> GenericDataItem<T> {
+    public static func Item(_ data: T? = nil, title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> GenericDataItem<T> {
         return self.init(data: data, title: title, subtitle: subtitle, image: image, cellType: cellType)
     }
 

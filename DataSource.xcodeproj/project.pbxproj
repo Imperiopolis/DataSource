@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1E5B888B1BD3EB5800D435B2 /* DataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E5B888A1BD3EB5800D435B2 /* DataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1E5B88931BD3EB6B00D435B2 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88921BD3EB6B00D435B2 /* Item.swift */; settings = {ASSET_TAGS = (); }; };
-		1E5B88951BD3EB7200D435B2 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88941BD3EB7200D435B2 /* Section.swift */; settings = {ASSET_TAGS = (); }; };
-		1E5B88971BD3EB7900D435B2 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88961BD3EB7900D435B2 /* DataSource.swift */; settings = {ASSET_TAGS = (); }; };
+		1E5B88931BD3EB6B00D435B2 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88921BD3EB6B00D435B2 /* Item.swift */; };
+		1E5B88951BD3EB7200D435B2 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88941BD3EB7200D435B2 /* Section.swift */; };
+		1E5B88971BD3EB7900D435B2 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88961BD3EB7900D435B2 /* DataSource.swift */; };
 		1E5B889F1BD3ECB900D435B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B889E1BD3ECB900D435B2 /* AppDelegate.swift */; };
 		1E5B88A11BD3ECB900D435B2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88A01BD3ECB900D435B2 /* ViewController.swift */; };
 		1E5B88A61BD3ECB900D435B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E5B88A51BD3ECB900D435B2 /* Assets.xcassets */; };
@@ -161,16 +161,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = SMD;
 				TargetAttributes = {
 					1E5B88861BD3EB5800D435B2 = {
 						CreatedOnToolsVersion = 7.0.1;
-						DevelopmentTeam = 7494466V98;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 					};
 					1E5B889B1BD3ECB900D435B2 = {
 						CreatedOnToolsVersion = 7.0.1;
-						DevelopmentTeam = 7494466V98;
+						DevelopmentTeam = 5ZK9QR5YG8;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -267,11 +270,12 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -315,11 +319,12 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -336,6 +341,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -348,6 +354,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -358,6 +365,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -366,6 +374,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -375,6 +384,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.smd.DataSource;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -382,10 +392,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5ZK9QR5YG8;
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.smd.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -393,10 +406,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5ZK9QR5YG8;
 				INFOPLIST_FILE = Example/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.smd.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -419,6 +435,7 @@
 				1E5B88911BD3EB5800D435B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1E5B88AB1BD3ECB900D435B2 /* Build configuration list for PBXNativeTarget "Example" */ = {
 			isa = XCConfigurationList;
@@ -427,6 +444,7 @@
 				1E5B88AD1BD3ECB900D435B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
