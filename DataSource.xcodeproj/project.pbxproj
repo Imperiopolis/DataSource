@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E32C7151D80F4FD003395C7 /* DataSourceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E32C7141D80F4FD003395C7 /* DataSourceProtocols.swift */; };
 		1E5B888B1BD3EB5800D435B2 /* DataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E5B888A1BD3EB5800D435B2 /* DataSource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E5B88931BD3EB6B00D435B2 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88921BD3EB6B00D435B2 /* Item.swift */; };
 		1E5B88951BD3EB7200D435B2 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B88941BD3EB7200D435B2 /* Section.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E32C7141D80F4FD003395C7 /* DataSourceProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceProtocols.swift; sourceTree = "<group>"; };
 		1E5B88871BD3EB5800D435B2 /* DataSource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataSource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E5B888A1BD3EB5800D435B2 /* DataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataSource.h; sourceTree = "<group>"; };
 		1E5B888C1BD3EB5800D435B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				1E5B88921BD3EB6B00D435B2 /* Item.swift */,
 				1E5B88941BD3EB7200D435B2 /* Section.swift */,
 				1E5B88961BD3EB7900D435B2 /* DataSource.swift */,
+				1E32C7141D80F4FD003395C7 /* DataSourceProtocols.swift */,
 				1E5B888C1BD3EB5800D435B2 /* Info.plist */,
 			);
 			path = DataSource;
@@ -220,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E32C7151D80F4FD003395C7 /* DataSourceProtocols.swift in Sources */,
 				1E5B88971BD3EB7900D435B2 /* DataSource.swift in Sources */,
 				1E5B88931BD3EB6B00D435B2 /* Item.swift in Sources */,
 				1E5B88951BD3EB7200D435B2 /* Section.swift in Sources */,

@@ -29,7 +29,7 @@ public struct Section<Element: Item>: ExpressibleByArrayLiteral, MutableCollecti
     public var footerTitle: String?
     public var headerType: Int?
     public var footerType: Int?
-    fileprivate var items = [Element]()
+    private var items = [Element]()
 
     public var count: Int {
         return items.count

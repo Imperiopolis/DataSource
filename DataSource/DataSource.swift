@@ -24,64 +24,20 @@ THE SOFTWARE.
 
 import UIKit
 
-public protocol CellRegistrationDataSourceDelegate: class {
-    /**
-     Register the necessary cells.
-     */
-    func registerCells()
-}
-
-public extension CellRegistrationDataSourceDelegate {
-    /// Default implementation.
-    func registerCells() {
-        
-    }
-}
-
-public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
-    /**
-     Configure a cell for display. This method is called immediately after the cell is dequeued.
-
-     - parameter cell:      The cell to configure.
-     - parameter indexPath: The index path the cell will be displayed at.
-     */
-    func configure(cell: UITableViewCell, atIndexPath indexPath: IndexPath)
-}
-
-public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
-    /**
-     Configure a cell for display. This method is called immediately after the cell is dequeued.
-
-     - parameter cell:      The cell to configure.
-     - parameter indexPath: The index path the cell will be displayed at.
-     */
-    func configure(cell: UICollectionViewCell, atIndexPath indexPath: IndexPath)
-}
-
-public protocol CellConfigurationDelegate {
-    /**
-     Configure a cell for display. When implemented, this method is called immediately after the collection/table data source's configureCell method and allows for further customization.
-
-     - parameter item:      The model item.
-     - parameter indexPath: The index path the receiver will be displayed at.
-     */
-    func configure(withItem item: Item, indexPath: IndexPath)
-}
-
 open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, MutableCollection {
 
-    fileprivate var sections: [Section<Element>] = []
-    fileprivate var tableView: UITableView?
-    fileprivate weak var tableDelegate: TableViewDataSourceDelegate?
-    fileprivate var collectionView: UICollectionView?
-    fileprivate weak var collectionDelegate: CollectionViewDataSourceDelegate?
-    fileprivate var configuring: Bool = false
+    private var sections: [Section<Element>] = []
+    private var tableView: UITableView?
+    private weak var tableDelegate: TableViewDataSourceDelegate?
+    private var collectionView: UICollectionView?
+    private weak var collectionDelegate: CollectionViewDataSourceDelegate?
+    private var configuring: Bool = false
 
     override public init() {
 
     }
 
-    // MARK - Configure the data source
+    // MARK: Configure the data source
 
     /**
     Configure the data source with the given table view and delegate. This method may only be called once.
@@ -131,7 +87,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         configuring = false
     }
 
-    // MARK - Interact with the data source
+    // MARK: Interact with the data source
 
     /**
     Add a new section at the end of the data source.
@@ -207,7 +163,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         return index < sections.count ? sections[index] : nil
     }
 
-    // MARK: - Table registrations
+    // MARK: Table registrations
 
     /**
     Register a table cell class for the given cell type. This method may only be called from with in the registerCells.
@@ -245,7 +201,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         tableView.register(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
     }
     
-    // MARK: - Collection registrations
+    // MARK: Collection registrations
 
     /**
      Register a collection cell class for the given cell type. This method may only be called from with in the registerCells.
@@ -265,7 +221,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         collectionView.register(cellClass, forCellWithReuseIdentifier: String(cellType))
     }
 
-    // MARK: - UITableViewDataSource methods
+    // MARK: UITableViewDataSource methods
 
     open func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -299,7 +255,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         return sectionAtIndex(section)?.footerTitle
     }
 
-    // MARK: - UICollectionViewDataSource methods
+    // MARK: UICollectionViewDataSource methods
 
     open func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
@@ -325,7 +281,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         return cell
     }
 
-    // MARK: - Reloader
+    // MARK: Reloading
 
     /**
     Trigger a data reload.
@@ -359,7 +315,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter indexPaths: index paths to reload
      - parameter animation:  animation effect
      */
-    open func reloadIndexPaths(_ indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func reload(indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.reloadRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -373,7 +329,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to reload
      - parameter animation:  animation effect
      */
-    open func reloadSections(_ sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func reload(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.reloadSections(sections, with: animation)
         } else if let collectionView = collectionView {
@@ -382,12 +338,12 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
     }
 
     /**
-     Insert rows at the specified index paths. For table views, the provided animation effect will be applied.
+     Insert items at the specified index paths. For table views, the provided animation effect will be applied.
 
      - parameter indexPaths: rows to insert
      - parameter animation:  animation effect
      */
-    open func insertRowsAtIndexPaths(_ indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func insert(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.insertRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -396,12 +352,12 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
     }
 
     /**
-     Delete rows at the specified index paths. For table views, the provided animation effect will be applied.
+     Delete items at the specified index paths. For table views, the provided animation effect will be applied.
 
      - parameter indexPaths: rows to delete
      - parameter animation:  animation effect
      */
-    open func deleteRowsAtIndexPaths(_ indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func delete(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.deleteRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -415,7 +371,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    open func insertSections(_ sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func insert(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.insertSections(sections, with: animation)
         } else if let collectionView = collectionView {
@@ -429,7 +385,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    open func deleteSections(_ sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func delete(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.deleteSections(sections, with: animation)
         } else if let collectionView = collectionView {
@@ -437,13 +393,13 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         }
     }
 
-    // MARK: - SequenceType
+    // MARK: SequenceType
 
     open func makeIterator() -> IndexingIterator<[Section<Element>]> {
         return sections.makeIterator()
     }
 
-    // MARK: - Indexable
+    // MARK: Indexable
 
     public typealias Index = Int
 
@@ -464,7 +420,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         }
     }
 
-    // MARK: - MutableIndexable
+    // MARK: MutableIndexable
 
     public func index(after i: Int) -> Int {
         return sections.index(after: i)

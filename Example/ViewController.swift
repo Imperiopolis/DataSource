@@ -26,7 +26,6 @@ import UIKit
 import DataSource
 
 class TableViewController: UITableViewController, TableViewDataSourceDelegate {
-
     let dataSource = DataSource<DataItem>()
 
     override func viewDidLoad() {
@@ -73,14 +72,12 @@ class TableViewController: UITableViewController, TableViewDataSourceDelegate {
         cell.textLabel?.text = item.title
     }
 
-    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
 }
 
 class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
-
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
@@ -98,5 +95,4 @@ class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
         detailTextLabel?.textColor = .lightGray
         accessoryType = .disclosureIndicator
     }
-
 }
