@@ -89,7 +89,7 @@ class CustomCellClass: UITableViewCell, CellConfigurationDelegate {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configureWithItem(_ item: Item, indexPath: IndexPath) {
+    func configure(withItem item: Item, indexPath: IndexPath) {
         // This method is performed AFTER the viewController's
         // equivalent `configureCell` method and can allow for further customization.
         textLabel?.text = item.title?.uppercased()

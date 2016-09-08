@@ -25,7 +25,6 @@ THE SOFTWARE.
 import UIKit
 
 public protocol CellRegistrationDataSourceDelegate: class {
-
     /**
      Register the necessary cells.
      */
@@ -33,15 +32,13 @@ public protocol CellRegistrationDataSourceDelegate: class {
 }
 
 public extension CellRegistrationDataSourceDelegate {
-    
+    /// Default implementation.
     func registerCells() {
         
     }
-    
 }
 
 public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
-
     /**
      Configure a cell for display. This method is called immediately after the cell is dequeued.
 
@@ -52,7 +49,6 @@ public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate 
 }
 
 public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
-
     /**
      Configure a cell for display. This method is called immediately after the cell is dequeued.
 
@@ -63,14 +59,13 @@ public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDele
 }
 
 public protocol CellConfigurationDelegate {
-
     /**
      Configure a cell for display. When implemented, this method is called immediately after the collection/table data source's configureCell method and allows for further customization.
 
      - parameter item:      The model item.
      - parameter indexPath: The index path the receiver will be displayed at.
      */
-    func configureWithItem(_ item: Item, indexPath: IndexPath)
+    func configure(withItem item: Item, indexPath: IndexPath)
 }
 
 open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, MutableCollection {
@@ -290,7 +285,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         tableDelegate?.configure(cell: cell, atIndexPath: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configureWithItem(item, indexPath: indexPath)
+            cell.configure(withItem: item, indexPath: indexPath)
         }
 
         return cell
@@ -324,7 +319,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
         collectionDelegate?.configure(cell: cell, atIndexPath: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configureWithItem(item, indexPath: indexPath)
+            cell.configure(withItem: item, indexPath: indexPath)
         }
 
         return cell
