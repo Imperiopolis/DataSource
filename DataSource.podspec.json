@@ -1,15 +1,16 @@
 {
   "name": "DataSource",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": { "type": "MIT", "file": "LICENSE" },
   "summary": "Provides a base structure for representing table or collection view data.",
   "homepage": "https://github.com/noremac/DataSource",
   "authors": {
-      "Cameron Pulsford": "cpulsfor@me.com"
+      "Cameron Pulsford": "cpulsfor@me.com",
+      "Nora Trapp": "me@trappdesign.net"
     },
   "source": {
       "git": "https://github.com/noremac/DataSource.git",
-      "tag": "0.0.1"
+      "tag": "0.1.0"
     },
   "requires_arc": true,
   "platforms": {

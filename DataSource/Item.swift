@@ -42,7 +42,7 @@ public class ExtendableItem: Item {
     public required init() {}
 }
 
-public struct DataItem: Item, StringLiteralConvertible {
+public struct DataItem: Item, ExpressibleByStringLiteral {
     public var title: String?
     public var subtitle: String?
     public var image: UIImage?
@@ -53,10 +53,6 @@ public struct DataItem: Item, StringLiteralConvertible {
         subtitle = st
         image = i
         cellType = ct
-    }
-
-    public static func Item(title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> DataItem {
-        return self.init(title: title, subtitle: subtitle, image: image, cellType: cellType)
     }
 
     // MARK: - String literal convertible
@@ -74,7 +70,7 @@ public struct DataItem: Item, StringLiteralConvertible {
     }
 }
 
-public struct GenericDataItem<T>: Item, StringLiteralConvertible {
+public struct GenericDataItem<T>: Item, ExpressibleByStringLiteral {
     public var data: T?
     public var title: String?
     public var subtitle: String?
@@ -87,10 +83,6 @@ public struct GenericDataItem<T>: Item, StringLiteralConvertible {
         subtitle = st
         image = i
         cellType = ct
-    }
-
-    public static func Item(data: T? = nil, title: String? = nil, subtitle: String? = nil, image: UIImage? = nil, cellType: Int = 0) -> GenericDataItem<T> {
-        return self.init(data: data, title: title, subtitle: subtitle, image: image, cellType: cellType)
     }
 
     // MARK: - String literal convertible
