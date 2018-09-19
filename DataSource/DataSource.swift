@@ -94,7 +94,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
 
     - parameter section: The section to add.
     */
-    open func appendSection(_ section: Section<Element>) {
+    open func append(section: Section<Element>) {
         sections.append(section)
     }
 
@@ -104,7 +104,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter section: The section to be inserted.
      - parameter index:   The index at which the section should be inserted.
      */
-    open func insertSection(_ section: Section<Element>, atIndex index: Int) {
+    open func insert(section: Section<Element>, at index: Int) {
         sections.insert(section, at: index)
     }
 
@@ -115,7 +115,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
 
      - returns: The section that was removed.
      */
-    open func removeSectionAtIndex(_ index: Int) -> Section<Element> {
+    open func removeSection(at index: Int) -> Section<Element> {
         if index < sections.count {
             return sections.remove(at: index)
         } else {
@@ -137,9 +137,9 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
 
      - returns: The item at the given index path, or nil.
      */
-    open func itemForIndexPath(_ indexPath: IndexPath) -> Item? {
-        if let section = sectionAtIndex((indexPath as IndexPath).section) , (indexPath as IndexPath).row < section.count {
-            return section[(indexPath as IndexPath).row]
+    open func item(for indexPath: IndexPath) -> Item? {
+        if let section = section(at: indexPath.section) , indexPath.row < section.count {
+            return section[indexPath.row]
         }
 
         return nil
@@ -159,7 +159,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
 
      - returns: The section at the given index, or nil.
      */
-    open func sectionAtIndex(_ index: Int) -> Section<Element>? {
+    open func section(at index: Int) -> Section<Element>? {
         return index < sections.count ? sections[index] : nil
     }
 
@@ -228,31 +228,31 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
     }
 
     open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionAtIndex(section)?.count ?? 0
+        return self.section(at: section)?.count ?? 0
     }
 
     open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let item = itemForIndexPath(indexPath) else {
+        guard let item = item(for: indexPath) else {
             fatalError("There was no item for index path \(indexPath)")
         }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: String(item.cellType), for: indexPath)
 
-        tableDelegate?.configure(cell: cell, atIndexPath: indexPath)
+        tableDelegate?.configure(cell: cell, at: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configure(withItem: item, indexPath: indexPath)
+            cell.configure(with: item, at: indexPath)
         }
 
         return cell
     }
 
     open func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionAtIndex(section)?.headerTitle
+        return self.section(at: section)?.headerTitle
     }
 
     open func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return sectionAtIndex(section)?.footerTitle
+        return self.section(at: section)?.footerTitle
     }
 
     // MARK: UICollectionViewDataSource methods
@@ -262,20 +262,20 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
     }
 
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sectionAtIndex(section)?.count ?? 0
+        return self.section(at: section)?.count ?? 0
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let item = itemForIndexPath(indexPath) else {
+        guard let item = item(for: indexPath) else {
             fatalError("There was no item for index path \(indexPath)")
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(item.cellType), for: indexPath)
 
-        collectionDelegate?.configure(cell: cell, atIndexPath: indexPath)
+        collectionDelegate?.configure(cell: cell, at: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configure(withItem: item, indexPath: indexPath)
+            cell.configure(with: item, at: indexPath)
         }
 
         return cell
@@ -315,7 +315,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter indexPaths: index paths to reload
      - parameter animation:  animation effect
      */
-    open func reload(indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func reload(indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.reloadRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -329,7 +329,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to reload
      - parameter animation:  animation effect
      */
-    open func reload(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func reload(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.reloadSections(sections, with: animation)
         } else if let collectionView = collectionView {
@@ -343,7 +343,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter indexPaths: rows to insert
      - parameter animation:  animation effect
      */
-    open func insert(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func insert(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.insertRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -357,7 +357,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter indexPaths: rows to delete
      - parameter animation:  animation effect
      */
-    open func delete(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableViewRowAnimation = .automatic) {
+    open func delete(itemsAtIndexPaths indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.deleteRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
@@ -371,7 +371,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    open func insert(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func insert(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.insertSections(sections, with: animation)
         } else if let collectionView = collectionView {
@@ -385,7 +385,7 @@ open class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollect
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    open func delete(sections: IndexSet, animation: UITableViewRowAnimation = .automatic) {
+    open func delete(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
             tableView.deleteSections(sections, with: animation)
         } else if let collectionView = collectionView {

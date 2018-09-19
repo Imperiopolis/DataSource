@@ -45,7 +45,7 @@ public protocol TableViewDataSourceDelegate: CellRegistrationDataSourceDelegate 
      - parameter cell:      The cell to configure.
      - parameter indexPath: The index path the cell will be displayed at.
      */
-    func configure(cell: UITableViewCell, atIndexPath indexPath: IndexPath)
+    func configure(cell: UITableViewCell, at indexPath: IndexPath)
 }
 
 public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDelegate {
@@ -55,7 +55,7 @@ public protocol CollectionViewDataSourceDelegate: CellRegistrationDataSourceDele
      - parameter cell:      The cell to configure.
      - parameter indexPath: The index path the cell will be displayed at.
      */
-    func configure(cell: UICollectionViewCell, atIndexPath indexPath: IndexPath)
+    func configure(cell: UICollectionViewCell, at indexPath: IndexPath)
 }
 
 public protocol CellConfigurationDelegate {
@@ -65,5 +65,5 @@ public protocol CellConfigurationDelegate {
      - parameter item:      The model item.
      - parameter indexPath: The index path the receiver will be displayed at.
      */
-    func configure(withItem item: Item, indexPath: IndexPath)
+    func configure(with item: Item, at indexPath: IndexPath)
 }

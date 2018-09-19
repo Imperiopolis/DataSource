@@ -1,5 +1,5 @@
 {
-  "name": "DataSource",
+  "name": "Sectional",
   "version": "0.0.2",
   "license": { "type": "MIT", "file": "LICENSE" },
   "summary": "Provides a base structure for representing table or collection view data.",
