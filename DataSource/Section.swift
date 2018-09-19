@@ -24,7 +24,7 @@
 
 import UIKit
 
-public struct Section<Element: Item>: ArrayLiteralConvertible, CollectionType, Indexable, SequenceType, MutableCollectionType  {
+public struct Section<Element: Item>: ExpressibleByArrayLiteral, MutableCollection  {
     public var headerTitle: String?
     public var footerTitle: String?
     private var items = [Element]()
@@ -41,15 +41,13 @@ public struct Section<Element: Item>: ArrayLiteralConvertible, CollectionType, I
         items = elements
     }
 
-    // MARK: - SequenceType
-
-    public func generate() -> IndexingGenerator<[Element]> {
-        return items.generate()
-    }
-
-    // MARK: - Indexable
+    // MARK: - MutableCollection
 
     public typealias Index = Int
+
+    public func index(after i: Int) -> Int {
+        return items.index(after: i)
+    }
 
     public var startIndex: Index {
         return items.startIndex

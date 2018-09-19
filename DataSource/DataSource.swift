@@ -37,7 +37,7 @@ public protocol TableViewDataSourceDelegate: class {
     - parameter cell:      The cell to configure.
     - parameter indexPath: The index path the cell will be displayed at.
     */
-    func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath)
+    func configure(cell: UITableViewCell, at indexPath: IndexPath)
 }
 
 public protocol CollectionViewDataSourceDelegate: class {
@@ -53,7 +53,7 @@ public protocol CollectionViewDataSourceDelegate: class {
     - parameter cell:      The cell to configure.
     - parameter indexPath: The index path the cell will be displayed at.
     */
-    func configureCell(cell: UICollectionViewCell, atIndexPath indexPath: NSIndexPath)
+    func configure(cell: UICollectionViewCell, at indexPath: IndexPath)
 }
 
 public protocol CellConfigurationDelegate {
@@ -64,10 +64,10 @@ public protocol CellConfigurationDelegate {
     - parameter item:      The model item.
     - parameter indexPath: The index path the receiver will be displayed at.
     */
-    func configureWithItem(item: Item, indexPath: NSIndexPath)
+    func configure(with item: Item, at indexPath: IndexPath)
 }
 
-public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, CollectionType, SequenceType, Indexable, MutableCollectionType {
+public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UICollectionViewDataSource, MutableCollection {
 
     private var sections = [Section<Element>]()
     private var tableView: UITableView?
@@ -137,7 +137,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
     - parameter section: The section to add.
     */
-    public func appendSection(section: Section<Element>) {
+    public func append(section: Section<Element>) {
         sections.append(section)
     }
 
@@ -147,8 +147,8 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     - parameter section: The section to be inserted.
     - parameter index:   The index at which the section should be inserted.
     */
-    public func insertSection(section: Section<Element>, atIndex index: Int) {
-        sections.insert(section, atIndex: index)
+    public func insert(section: Section<Element>, at index: Int) {
+        sections.insert(section, at: index)
     }
 
     /**
@@ -158,9 +158,9 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
     - returns: The section that was removed.
     */
-    public func removeSectionAtIndex(index: Int) -> Section<Element> {
+    public func removeSection(at index: Int) -> Section<Element> {
         if index < sections.count {
-            return sections.removeAtIndex(index)
+            return sections.remove(at: index)
         } else {
             fatalError("The index \(index) is out of bounds.")
         }
@@ -180,8 +180,8 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
     - returns: The item at the given index path, or nil.
     */
-    public func itemForIndexPath(indexPath: NSIndexPath) -> Item? {
-        if let section = sectionAtIndex(indexPath.section) where indexPath.row < section.count {
+    public func item(for indexPath: IndexPath) -> Item? {
+        if let section = section(at: indexPath.section), indexPath.row < section.count {
             return section[indexPath.row]
         }
 
@@ -202,7 +202,7 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
 
     - returns: The section at the given index, or nil.
     */
-    public func sectionAtIndex(index: Int) -> Section<Element>? {
+    public func section(at index: Int) -> Section<Element>? {
         return index < sections.count ? sections[index] : nil
     }
 
@@ -214,16 +214,16 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     - parameter cellType:  The cell type (reuse identifier).
     - parameter cellClass: The cell class.
     */
-    public func registerTableCell(cellType cellType: Int, cellClass: AnyClass) {
+    public func registerTableCell(cellType: Int, cellClass: AnyClass) {
         guard configuring else {
-            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+            fatalError("\(#function) may only be called from the registerCells method.")
         }
 
         guard let tableView = tableView else {
-            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a table view.")
+            fatalError("\(#function) may only be called if the data source is configured to use a table view.")
         }
 
-        tableView.registerClass(cellClass, forCellReuseIdentifier: String(cellType))
+        tableView.register(cellClass, forCellReuseIdentifier: String(cellType))
     }
 
     /**
@@ -232,16 +232,16 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     - parameter viewType:  The view type (reuse identifier).
     - parameter viewClass: The view class.
     */
-    public func registerTableHeaderFooterView(viewType viewType: Int, viewClass: AnyClass) {
+    public func registerTableHeaderFooterView(viewType: Int, viewClass: AnyClass) {
         guard configuring else {
-            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+            fatalError("\(#function) may only be called from the registerCells method.")
         }
 
         guard let tableView = tableView else {
-            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a table view.")
+            fatalError("\(#function) may only be called if the data source is configured to use a table view.")
         }
 
-        tableView.registerClass(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
+        tableView.register(viewClass, forHeaderFooterViewReuseIdentifier: String(viewType))
     }
 
     /**
@@ -250,73 +250,73 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
     - parameter cellType:  The cell type (reuse identifier).
     - parameter cellClass: The cell class.
     */
-    public func registerCollectionCell(cellType cellType: Int, cellClass: AnyClass) {
+    public func registerCollectionCell(cellType: Int, cellClass: AnyClass) {
         guard configuring else {
-            fatalError("\(__FUNCTION__) may only be called from the registerCells method.")
+            fatalError("\(#function) may only be called from the registerCells method.")
         }
 
         guard let collectionView = collectionView else {
-            fatalError("\(__FUNCTION__) may only be called if the data source is configured to use a collection view.")
+            fatalError("\(#function) may only be called if the data source is configured to use a collection view.")
         }
 
-        collectionView.registerClass(cellClass, forCellWithReuseIdentifier: String(cellType))
+        collectionView.register(cellClass, forCellWithReuseIdentifier: String(cellType))
     }
 
     // MARK: - UITableViewDataSource methods
 
-    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
 
-    public func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sectionAtIndex(section)?.count ?? 0
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.section(at: section)?.count ?? 0
     }
 
-    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        guard let item = itemForIndexPath(indexPath) else {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let item = item(for: indexPath) else {
             fatalError("There was no item for index path \(indexPath)")
         }
 
-        let cell = tableView.dequeueReusableCellWithIdentifier(String(item.cellType), forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(item.cellType), for: indexPath)
 
-        tableDelegate?.configureCell(cell, atIndexPath: indexPath)
+        tableDelegate?.configure(cell: cell, at: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configureWithItem(item, indexPath: indexPath)
+            cell.configure(with: item, at: indexPath)
         }
 
         return cell
     }
 
-    public func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionAtIndex(section)?.headerTitle
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.section(at: section)?.headerTitle
     }
 
-    public func tableView(tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return sectionAtIndex(section)?.footerTitle
+    public func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        return self.section(at: section)?.footerTitle
     }
 
     // MARK: - UICollectionViewDataSource methods
 
-    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
 
-    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return sectionAtIndex(section)?.count ?? 0
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.section(at: section)?.count ?? 0
     }
 
-    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        guard let item = itemForIndexPath(indexPath) else {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let item = item(for: indexPath) else {
             fatalError("There was no item for index path \(indexPath)")
         }
 
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(String(item.cellType), forIndexPath: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(item.cellType), for: indexPath)
 
-        collectionDelegate?.configureCell(cell, atIndexPath: indexPath)
+        collectionDelegate?.configure(cell: cell, at: indexPath)
 
         if let cell = cell as? CellConfigurationDelegate {
-            cell.configureWithItem(item, indexPath: indexPath)
+            cell.configure(with: item, at: indexPath)
         }
 
         return cell
@@ -356,11 +356,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter indexPaths: index paths to reload
      - parameter animation:  animation effect
      */
-    public func reloadIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+    public func reloadIndexPaths(indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+            tableView.reloadRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
-            collectionView.reloadItemsAtIndexPaths(indexPaths)
+            collectionView.reloadItems(at: indexPaths)
         }
     }
     
@@ -370,9 +370,9 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter sections: sections to reload
      - parameter animation:  animation effect
      */
-    public func reloadSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+    public func reloadSections(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.reloadSections(sections, withRowAnimation: animation)
+            tableView.reloadSections(sections, with: animation)
         } else if let collectionView = collectionView {
             collectionView.reloadSections(sections)
         }
@@ -384,11 +384,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter indexPaths: rows to insert
      - parameter animation:  animation effect
      */
-    public func insertRowsAtIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+    public func insertRowsAtIndexPaths(indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+            tableView.insertRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
-            collectionView.insertItemsAtIndexPaths(indexPaths)
+            collectionView.insertItems(at: indexPaths)
         }
     }
     
@@ -398,11 +398,11 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter indexPaths: rows to delete
      - parameter animation:  animation effect
      */
-    public func deleteRowsAtIndexPaths(indexPaths: [NSIndexPath], animation: UITableViewRowAnimation = .Automatic) {
+    public func deleteRowsAtIndexPaths(indexPaths: [IndexPath], animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
+            tableView.deleteRows(at: indexPaths, with: animation)
         } else if let collectionView = collectionView {
-            collectionView.deleteItemsAtIndexPaths(indexPaths)
+            collectionView.deleteItems(at: indexPaths)
         }
     }
     
@@ -412,9 +412,9 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    public func insertSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+    public func insertSections(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.insertSections(sections, withRowAnimation: animation)
+            tableView.insertSections(sections, with: animation)
         } else if let collectionView = collectionView {
             collectionView.insertSections(sections)
         }
@@ -426,23 +426,21 @@ public class DataSource<Element: Item>: NSObject, UITableViewDataSource, UIColle
      - parameter sections: sections to insert
      - parameter animation:  animation effect
      */
-    public func deleteSections(sections: NSIndexSet, animation: UITableViewRowAnimation = .Automatic) {
+    public func deleteSections(sections: IndexSet, animation: UITableView.RowAnimation = .automatic) {
         if let tableView = tableView {
-            tableView.deleteSections(sections, withRowAnimation: animation)
+            tableView.deleteSections(sections, with: animation)
         } else if let collectionView = collectionView {
             collectionView.deleteSections(sections)
         }
     }
-    
-    // MARK: - SequenceType
 
-    public func generate() -> IndexingGenerator<[Section<Element>]> {
-        return sections.generate()
-    }
-
-    // MARK: - Indexable
+    // MARK: - MutableCollection
 
     public typealias Index = Int
+
+    public func index(after i: Int) -> Int {
+        return sections.index(after: i)
+    }
 
     public var startIndex: Index {
         return sections.startIndex
